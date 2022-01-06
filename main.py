@@ -1,6 +1,7 @@
-from PyQt5 import QtWidgets
 import sys
-from View.MainWindow import *
+from View.View import *
+from Controller.Controller import *
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

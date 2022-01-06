@@ -1,3 +1,10 @@
+from .Student import *
+from .Lesson import *
+from .Exam import *
+from .Grade import *
+from .Event import *
+
+
 class Model:
     def __init__(self):
         self._student = None

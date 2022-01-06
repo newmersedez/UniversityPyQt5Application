@@ -1,7 +1,8 @@
+from socket import socket, AF_INET, SOCK_STREAM, SHUT_RDWR
 from PyQt5 import QtWidgets, QtGui
 from Utils.ServerRequest import *
+from Model.Model import *
 import json
-from socket import socket, AF_INET, SOCK_STREAM, SHUT_RDWR
 
 
 class Controller:
@@ -66,7 +67,13 @@ class Controller:
                 recvText = bytes_buffer.decode('utf-8')
                 s.shutdown(SHUT_RDWR)
                 s.close()
-                print(recvText)
+                if recvText == '[]':
+                    QtWidgets.QMessageBox.about(self._view, "Ошибка", "Неправильный логин или пароль")
+                else:
+                    student = Student()
+                    self._model.initStudent(student)
+                    obj = json.loads(recvText)
+
             except ConnectionError:
                 QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
 

@@ -128,17 +128,153 @@ class Controller:
                 QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
 
     def logoutButtonClick(self):
+        self._view.table.setRowCount(0)
+        self._view.table.setColumnCount(0)
         self._toggleViewElementsVisibility(True)
         self._model.removeAll()
 
     def lessonsButtonClicked(self):
-        print('lessons')
+        serverRequest = ServerRequest()
+        serverRequest.RequestName = 'Lessons'
+        serverRequest.Args.append(self._model.getStudent().StudentGroup)
+        jsonText = json.dumps(serverRequest.__dict__)
+
+        try:
+            # Send request to server
+            s = socket(AF_INET, SOCK_STREAM)
+            s.connect(('localhost', 5430))
+            s.send(str.encode(jsonText))
+
+            # Get request from server
+            bytes_buffer = s.recv(10000)
+            recvText = bytes_buffer.decode('utf-8')
+            s.shutdown(SHUT_RDWR)
+            s.close()
+            obj = json.loads(recvText)
+            print(len(obj))
+
+            if len(obj) > 0:
+                self._view.table.setColumnCount(len(obj[0]))
+                self._view.table.setRowCount(len(obj))
+                self._view.table.setHorizontalHeaderLabels(
+                    ['День недели', 'Время', 'Тип занятий', 'Аудитория', 'Предмет'])
+                for i in range(len(obj)):
+                    self._view.table.setItem(i, 0, QtWidgets.QTableWidgetItem(obj[i]['LessonDay']))
+                    self._view.table.setItem(i, 1, QtWidgets.QTableWidgetItem(obj[i]['LessonTime']))
+                    self._view.table.setItem(i, 2, QtWidgets.QTableWidgetItem(obj[i]['LessonType']))
+                    self._view.table.setItem(i, 3, QtWidgets.QTableWidgetItem(obj[i]['ClassroomName']))
+                    self._view.table.setItem(i, 4, QtWidgets.QTableWidgetItem(obj[i]['SubjectName']))
+                self._view.table.resizeColumnsToContents()
+
+        except ConnectionError:
+            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
 
     def examsButtonClicked(self):
-        print('exams')
+        serverRequest = ServerRequest()
+        serverRequest.RequestName = 'Exams'
+        serverRequest.Args.append(self._model.getStudent().StudentGroup)
+        jsonText = json.dumps(serverRequest.__dict__)
+
+        try:
+            # Send request to server
+            s = socket(AF_INET, SOCK_STREAM)
+            s.connect(('localhost', 5430))
+            s.send(str.encode(jsonText))
+
+            # Get request from server
+            bytes_buffer = s.recv(10000)
+            recvText = bytes_buffer.decode('utf-8')
+            s.shutdown(SHUT_RDWR)
+            s.close()
+            obj = json.loads(recvText)
+            print(len(obj))
+
+            if len(obj) > 0:
+                self._view.table.setColumnCount(len(obj[0]))
+                self._view.table.setRowCount(len(obj))
+                self._view.table.setHorizontalHeaderLabels(
+                    ['Предмет', 'Группа', 'Дата', 'Время', 'Аудитория'])
+                for i in range(len(obj)):
+                    self._view.table.setItem(i, 0, QtWidgets.QTableWidgetItem(obj[i]['SubjectName']))
+                    self._view.table.setItem(i, 1, QtWidgets.QTableWidgetItem(obj[i]['GroupName']))
+                    self._view.table.setItem(i, 2, QtWidgets.QTableWidgetItem(obj[i]['ExamDate']))
+                    self._view.table.setItem(i, 3, QtWidgets.QTableWidgetItem(obj[i]['ExamTime']))
+                    self._view.table.setItem(i, 4, QtWidgets.QTableWidgetItem(obj[i]['ClassroomName']))
+                self._view.table.resizeColumnsToContents()
+
+        except ConnectionError:
+            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
 
     def gradesButtonClicked(self):
-        print('grades')
+        serverRequest = ServerRequest()
+        serverRequest.RequestName = 'Marks'
+        serverRequest.Args.append(self._model.getStudent().StudentLastname)
+        serverRequest.Args.append(self._model.getStudent().StudentName)
+        serverRequest.Args.append(self._model.getStudent().StudentPatronymic)
+        jsonText = json.dumps(serverRequest.__dict__)
+
+        try:
+            # Send request to server
+            s = socket(AF_INET, SOCK_STREAM)
+            s.connect(('localhost', 5430))
+            s.send(str.encode(jsonText))
+
+            # Get request from server
+            bytes_buffer = s.recv(10000)
+            recvText = bytes_buffer.decode('utf-8')
+            s.shutdown(SHUT_RDWR)
+            s.close()
+            obj = json.loads(recvText)
+            print(len(obj))
+
+            if len(obj) > 0:
+                self._view.table.setColumnCount(len(obj[0]))
+                self._view.table.setRowCount(len(obj))
+                self._view.table.setHorizontalHeaderLabels(
+                    ['Фамилия', 'Имя', 'Отчество', 'Предмет', 'Оценка'])
+                for i in range(len(obj)):
+                    self._view.table.setItem(i, 0, QtWidgets.QTableWidgetItem(obj[i]['StudentLastname']))
+                    self._view.table.setItem(i, 1, QtWidgets.QTableWidgetItem(obj[i]['StudentName']))
+                    self._view.table.setItem(i, 2, QtWidgets.QTableWidgetItem(obj[i]['StudentPatronymic']))
+                    self._view.table.setItem(i, 3, QtWidgets.QTableWidgetItem(obj[i]['SubjectName']))
+                    self._view.table.setItem(i, 4, QtWidgets.QTableWidgetItem(obj[i]['Grade']))
+                self._view.table.resizeColumnsToContents()
+
+        except ConnectionError:
+            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
 
     def eventsButtonClicked(self):
-        print('events')
+        serverRequest = ServerRequest()
+        serverRequest.RequestName = 'Events'
+        jsonText = json.dumps(serverRequest.__dict__)
+
+        try:
+            # Send request to server
+            s = socket(AF_INET, SOCK_STREAM)
+            s.connect(('localhost', 5430))
+            s.send(str.encode(jsonText))
+
+            # Get request from server
+            bytes_buffer = s.recv(10000)
+            recvText = bytes_buffer.decode('utf-8')
+            s.shutdown(SHUT_RDWR)
+            s.close()
+            obj = json.loads(recvText)
+            print(len(obj))
+
+            if len(obj) > 0:
+                self._view.table.setColumnCount(len(obj[0]))
+                self._view.table.setRowCount(len(obj))
+                self._view.table.setHorizontalHeaderLabels(
+                    ['Названеие', 'Дата', 'Время', 'Аудитория', 'Группа'])
+                for i in range(len(obj)):
+                    self._view.table.setItem(i, 0, QtWidgets.QTableWidgetItem(obj[i]['EventName']))
+                    self._view.table.setItem(i, 1, QtWidgets.QTableWidgetItem(obj[i]['EventDate']))
+                    self._view.table.setItem(i, 2, QtWidgets.QTableWidgetItem(obj[i]['EventTime']))
+                    self._view.table.setItem(i, 3, QtWidgets.QTableWidgetItem(obj[i]['ClassroomName']))
+                    self._view.table.setItem(i, 4, QtWidgets.QTableWidgetItem(obj[i]['GroupName']))
+                self._view.table.resizeColumnsToContents()
+
+        except ConnectionError:
+            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
+

@@ -14,7 +14,6 @@ class View(QtWidgets.QMainWindow):
         self.resize(1280, 768)
         self.setFont(QtGui.QFont('Arial', 15))
         self.setStyleSheet("QWidget { background-color: #606060; }")
-
         self._configureLayouts()
         self.show()
 
@@ -30,14 +29,38 @@ class View(QtWidgets.QMainWindow):
 
         # Title
         self.titleLayout = QtWidgets.QHBoxLayout()
-        self.title = QtWidgets.QLabel('Электронная зачетка МАИ')
+        self.title = QtWidgets.QLabel('Электронная зачетная книжка')
+        self.title.setAlignment(QtCore.Qt.AlignCenter)
         self.title.setFont(QtGui.QFont('Arial', 28))
         self.title.setStyleSheet("QLabel { color : white; }")
         self.titleLayout.addWidget(self.title)
+        self.titleLayout.setContentsMargins(0, 0, 0, 20)
         self.withTitleLayout.addLayout(self.titleLayout)
         self.withTitleLayout.addLayout(self.mainLayout)
 
-        # Buttons
+        # Menu layouts
+        self.studyInfoLayout = QtWidgets.QVBoxLayout()
+        self.menuLayout.addLayout(self.studyInfoLayout)
+
+        # Configure window central widget
+        self.mainLayout.addLayout(self.menuLayout)
+        self.mainLayout.addLayout(self.contentLayout)
+        self.mainWidget.setLayout(self.withTitleLayout)
+        self.menuLayout.setContentsMargins(20, 20, 20, 20)
+        self.contentLayout.setContentsMargins(20, 20, 20, 20)
+        self.setCentralWidget(self.mainWidget)
+
+        # Configure layouts
+        self._configureButtonsLayout()
+        self._configureStudentNameLayout()
+        self._configureGroupLayout()
+        self._configureDegreeLayout()
+        self._configureFormOfEducationLayout()
+        self._configureSpecialityCodeLayout()
+        self._configureSpecialityNameLayout()
+        self._configureContentLayout()
+
+    def _configureButtonsLayout(self):
         self.loginLogoutLayout = QtWidgets.QVBoxLayout()
         self.loginButton = QtWidgets.QPushButton('Войти', self)
         self.loginButton.clicked.connect(self._controller.loginButtonClick)
@@ -52,15 +75,11 @@ class View(QtWidgets.QMainWindow):
         self.loginLogoutLayout.addWidget(self.logoutButton)
         self.menuLayout.addLayout(self.loginLogoutLayout)
 
-        # Menu layouts
-        self.studyInfoLayout = QtWidgets.QVBoxLayout()
-        self.menuLayout.addLayout(self.studyInfoLayout)
-
-        # Lastname Name Patronymic
+    def _configureStudentNameLayout(self):
         self.lastnameLayout = QtWidgets.QVBoxLayout()
         self.lastname = QtWidgets.QLabel('Тришин')
         self.lastname.setStyleSheet("QLabel { color : white; }")
-        self.lastname.setFont(QtGui.QFont('Arial', 25))
+        self.lastname.setFont(QtGui.QFont('Arial', 20))
         self.lastnameLayout.addWidget(self.lastname)
         self.studyInfoLayout.addLayout(self.lastnameLayout)
         self.lastname.setHidden(True)
@@ -68,7 +87,7 @@ class View(QtWidgets.QMainWindow):
         self.nameLayout = QtWidgets.QVBoxLayout()
         self.name = QtWidgets.QLabel('Дмитрий')
         self.name.setStyleSheet("QLabel { color : white; }")
-        self.name.setFont(QtGui.QFont('Arial', 25))
+        self.name.setFont(QtGui.QFont('Arial', 20))
         self.nameLayout.addWidget(self.name)
         self.studyInfoLayout.addLayout(self.nameLayout)
         self.name.setHidden(True)
@@ -76,12 +95,12 @@ class View(QtWidgets.QMainWindow):
         self.patronymicLayout = QtWidgets.QVBoxLayout()
         self.patronymic = QtWidgets.QLabel('Александрович')
         self.patronymic.setStyleSheet("QLabel { color : white; }")
-        self.patronymic.setFont(QtGui.QFont('Arial', 25))
+        self.patronymic.setFont(QtGui.QFont('Arial', 20))
         self.patronymicLayout.addWidget(self.patronymic)
         self.studyInfoLayout.addLayout(self.patronymicLayout)
         self.patronymic.setHidden(True)
 
-        # Group
+    def _configureGroupLayout(self):
         self.groupLayout = QtWidgets.QVBoxLayout()
         self.staticGroupLabel = QtWidgets.QLabel('Группа')
         self.staticGroupLabel.setStyleSheet("QLabel { color : #00B6FF; }")
@@ -95,7 +114,7 @@ class View(QtWidgets.QMainWindow):
         self.group.setHidden(True)
         self.staticGroupLabel.setHidden(True)
 
-        # Degree
+    def _configureDegreeLayout(self):
         self.degreeLayout = QtWidgets.QVBoxLayout()
         self.staticDegreeLabel = QtWidgets.QLabel('Образование')
         self.staticDegreeLabel.setStyleSheet("QLabel { color : #00B6FF; }")
@@ -109,7 +128,7 @@ class View(QtWidgets.QMainWindow):
         self.staticDegreeLabel.setHidden(True)
         self.degree.setHidden(True)
 
-        # FormOfEducation
+    def _configureFormOfEducationLayout(self):
         self.formOfEducationLayout = QtWidgets.QVBoxLayout()
         self.staticFormOfEducationLabel = QtWidgets.QLabel('Форма обучения')
         self.staticFormOfEducationLabel.setStyleSheet("QLabel { color : #00B6FF; }")
@@ -123,7 +142,7 @@ class View(QtWidgets.QMainWindow):
         self.staticFormOfEducationLabel.setHidden(True)
         self.formOfEducation.setHidden(True)
 
-        # SpecialityCode
+    def _configureSpecialityCodeLayout(self):
         self.specialityCodeLayout = QtWidgets.QVBoxLayout()
         self.staticCodeLabel = QtWidgets.QLabel('Код специальности')
         self.staticCodeLabel.setStyleSheet("QLabel { color : #00B6FF; }")
@@ -137,7 +156,7 @@ class View(QtWidgets.QMainWindow):
         self.staticCodeLabel.setHidden(True)
         self.specialityCode.setHidden(True)
 
-        # SpecialityName
+    def _configureSpecialityNameLayout(self):
         self.specialityNameLayout = QtWidgets.QVBoxLayout()
         self.staticSpecialityNameLabel = QtWidgets.QLabel('Направление')
         self.staticSpecialityNameLabel.setStyleSheet("QLabel { color : #00B6FF; }")
@@ -149,30 +168,44 @@ class View(QtWidgets.QMainWindow):
         self.specialityName.setFont(QtGui.QFont('Arial', 18))
         self.specialityNameLayout.addWidget(self.staticSpecialityNameLabel)
         self.specialityNameLayout.addWidget(self.specialityName)
+        self.specialityNameLayout.setContentsMargins(0, 0, 0, 20)
         self.studyInfoLayout.addLayout(self.specialityNameLayout)
         self.staticSpecialityNameLabel.setHidden(True)
         self.specialityName.setHidden(True)
 
-        # Content
-        self.tabWidget = QtWidgets.QTabWidget()
-        self.tabWidget.setStyleSheet("color: #00B6FF; font-size:14pt; background: #555555;")
-        self.tabLessons = QtWidgets.QWidget()
-        self.tabExams = QtWidgets.QWidget()
-        self.tabGrades = QtWidgets.QWidget()
-        self.tabEvents = QtWidgets.QWidget()
-        self.tabWidget.addTab(self.tabLessons, 'Расписание занятий')
-        self.tabWidget.addTab(self.tabExams, 'Расписание сессии')
-        self.tabWidget.addTab(self.tabGrades, 'Оценки')
-        self.tabWidget.addTab(self.tabEvents, 'Мероприятия')
-        self.tabWidget.setEnabled(False)
-        self.contentLayout.addWidget(self.tabWidget)
+    def _configureContentLayout(self):
+        self.actionButtonsLayout = QtWidgets.QHBoxLayout()
+        self.tableLayout = QtWidgets.QVBoxLayout()
 
-        self.mainLayout.addLayout(self.menuLayout)
-        self.mainLayout.addLayout(self.contentLayout)
-        self.mainWidget.setLayout(self.withTitleLayout)
-        self.menuLayout.setContentsMargins(20, 20, 20, 50)
-        self.contentLayout.setContentsMargins(20, 20, 20, 20)
-        self.setCentralWidget(self.mainWidget)
+        self.lessonsButton = QtWidgets.QPushButton('Расписание занятий', self)
+        self.lessonsButton.clicked.connect(self._controller.lessonsButtonClicked)
+        self.lessonsButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.lessonsButton.setFixedSize(200, 40)
+        self.lessonsButton.setHidden(True)
+        self.examsButton = QtWidgets.QPushButton('Расписание сессии', self)
+        self.examsButton.clicked.connect(self._controller.examsButtonClicked)
+        self.examsButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.examsButton.setFixedSize(200, 40)
+        self.examsButton.setHidden(True)
+        self.gradesButton = QtWidgets.QPushButton('Оценки', self)
+        self.gradesButton.clicked.connect(self._controller.gradesButtonClicked)
+        self.gradesButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.gradesButton.setFixedSize(200, 40)
+        self.gradesButton.setHidden(True)
+        self.eventsButton = QtWidgets.QPushButton('Мероприятия', self)
+        self.eventsButton.clicked.connect(self._controller.eventsButtonClicked)
+        self.eventsButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.eventsButton.setFixedSize(200, 40)
+        self.eventsButton.setHidden(True)
 
-    def func(self):
-        return self.loginButton
+        self.actionButtonsLayout.addWidget(self.lessonsButton)
+        self.actionButtonsLayout.addWidget(self.examsButton)
+        self.actionButtonsLayout.addWidget(self.gradesButton)
+        self.actionButtonsLayout.addWidget(self.eventsButton)
+
+        self.table = QtWidgets.QTableWidget()
+        self.tableLayout.addWidget(self.table)
+        self.table.setHidden(True)
+
+        self.contentLayout.addLayout(self.actionButtonsLayout)
+        self.contentLayout.addLayout(self.tableLayout)

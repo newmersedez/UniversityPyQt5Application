@@ -16,29 +16,51 @@ class Model:
     def initStudent(self, student):
         self._student = student
 
-    def getStudent(self):
-        return self._student
-
     def initLessons(self, lessons):
         self._lessons = lessons
-
-    def getLessons(self):
-        return self._lessons
 
     def initExams(self, exams):
         self._exams = exams
 
-    def getExams(self):
-        return self._exams
-
     def initGrades(self, grades):
         self._grades = grades
-
-    def getGrades(self):
-        return self._grades
 
     def initEvents(self, events):
         self._events = events
 
+    def getStudent(self):
+        return self._student
+
+    def getLessons(self):
+        return self._lessons
+
+    def getExams(self):
+        return self._exams
+
+    def getGrades(self):
+        return self._grades
+
     def getEvents(self):
         return self._events
+
+    def removeStudent(self):
+        self._student = None
+
+    def removeLessons(self):
+        self._lessons = None
+
+    def removeExams(self):
+        self._exams = None
+
+    def removeGrades(self):
+        self._grades = None
+
+    def removeEvents(self):
+        self._events = None
+
+    def removeAll(self):
+        self.removeStudent()
+        self.removeLessons()
+        self.removeExams()
+        self.removeGrades()
+        self.removeEvents()

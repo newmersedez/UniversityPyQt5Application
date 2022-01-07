@@ -1,5 +1,6 @@
 from socket import socket, AF_INET, SOCK_STREAM, SHUT_RDWR
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtCore import pyqtSlot
 from Utils.ServerRequest import *
 from Model.Model import *
 import json
@@ -13,7 +14,7 @@ class Controller:
     def setView(self, view):
         self._view = view
 
-    def loginButtonClick(self):
+    def _execLoginDialog(self):
         inputDialog = QtWidgets.QDialog(self._view)
         inputDialog.setWindowTitle('Авторизация')
         inputDialog.setFixedSize(300, 200)
@@ -29,6 +30,7 @@ class Controller:
         labelPassword = QtWidgets.QLabel('Пароль')
         labelPassword.setStyleSheet("QLabel { color : white; }")
         labelPassword.setFont(QtGui.QFont('Arial', 12))
+        labelPassword.setContentsMargins(0, 20, 0, 0)
         textBoxPassword = QtWidgets.QLineEdit()
         textBoxPassword.setFont(QtGui.QFont('Arial', 14))
         textBoxPassword.setStyleSheet("QLineEdit { color : #00B6FF; }")
@@ -44,12 +46,43 @@ class Controller:
         buttonBox.accepted.connect(inputDialog.accept)
         buttonBox.rejected.connect(inputDialog.reject)
 
-        ok = inputDialog.exec_()
+        status = inputDialog.exec_()
+        login = textBoxLogin.text()
+        password = textBoxPassword.text()
+        return status, login, password
 
-        if ok:
-            login = textBoxLogin.text()
-            password = textBoxPassword.text()
+    def _toggleViewElementsVisibility(self, value: bool):
+        self._view.loginButton.setEnabled(value)
+        self._view.logoutButton.setEnabled(not value)
+        self._view.lessonsButton.setHidden(value)
+        self._view.examsButton.setHidden(value)
+        self._view.gradesButton.setHidden(value)
+        self._view.eventsButton.setHidden(value)
+        self._view.table.setHidden(value)
 
+        self._view.lastname.setHidden(value)
+        self._view.name.setHidden(value)
+        self._view.patronymic.setHidden(value)
+
+        self._view.staticGroupLabel.setHidden(value)
+        self._view.group.setHidden(value)
+
+        self._view.staticDegreeLabel.setHidden(value)
+        self._view.degree.setHidden(value)
+
+        self._view.staticFormOfEducationLabel.setHidden(value)
+        self._view.formOfEducation.setHidden(value)
+
+        self._view.staticCodeLabel.setHidden(value)
+        self._view.specialityCode.setHidden(value)
+
+        self._view.staticSpecialityNameLabel.setHidden(value)
+        self._view.specialityName.setHidden(value)
+
+    def loginButtonClick(self):
+        status, login, password = self._execLoginDialog()
+
+        if status:
             # Create server request
             serverRequest = ServerRequest()
             serverRequest.RequestName = 'Auth'
@@ -71,23 +104,41 @@ class Controller:
                     QtWidgets.QMessageBox.about(self._view, "Ошибка", "Неправильный логин или пароль")
                 else:
                     student = Student()
-                    self._model.initStudent(student)
                     obj = json.loads(recvText)
+                    student.StudentLastname = obj[0]['StudentLastname']
+                    student.StudentName = obj[0]['StudentName']
+                    student.StudentPatronymic = obj[0]['StudentPatronymic']
+                    student.StudentGroup = obj[0]['StudentGroup']
+                    student.StudentDegree = obj[0]['StudentDegree']
+                    student.StudentFormOfEducation = obj[0]['StudentFormOfEducation']
+                    student.SpecialtyNumber = obj[0]['SpecialtyNumber']
+                    student.SpecialtyName = obj[0]['SpecialtyName']
+                    self._toggleViewElementsVisibility(False)
+                    self._model.initStudent(student)
+                    self._view.lastname.setText(student.StudentLastname)
+                    self._view.name.setText(student.StudentName)
+                    self._view.patronymic.setText(student.StudentPatronymic)
+                    self._view.group.setText(student.StudentGroup)
+                    self._view.degree.setText(student.StudentDegree)
+                    self._view.formOfEducation.setText(student.StudentFormOfEducation)
+                    self._view.specialityCode.setText(student.SpecialtyNumber)
+                    self._view.specialityName.setText(student.SpecialtyName)
 
             except ConnectionError:
                 QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
 
     def logoutButtonClick(self):
-        pass
+        self._toggleViewElementsVisibility(True)
+        self._model.removeAll()
 
-    def lessonsTabOpened(self):
-        pass
+    def lessonsButtonClicked(self):
+        print('lessons')
 
-    def examsTabOpened(self):
-        pass
+    def examsButtonClicked(self):
+        print('exams')
 
-    def gradesTabOpened(self):
-        pass
+    def gradesButtonClicked(self):
+        print('grades')
 
-    def eventsTabOpened(self):
-        pass
+    def eventsButtonClicked(self):
+        print('events')

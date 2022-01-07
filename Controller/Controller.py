@@ -79,6 +79,15 @@ class Controller:
         self._view.staticSpecialityNameLabel.setHidden(value)
         self._view.specialityName.setHidden(value)
 
+    @staticmethod
+    def _execErrorMessageBox(message: str):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Critical)
+        msg.setText(message)
+        msg.setWindowTitle("Ошибка")
+        msg.setStyleSheet('background-color : #606060; color : white; font-size : 12pt')
+        msg.exec_()
+
     def loginButtonClick(self):
         status, login, password = self._execLoginDialog()
 
@@ -101,7 +110,7 @@ class Controller:
                 s.shutdown(SHUT_RDWR)
                 s.close()
                 if recvText == '[]':
-                    QtWidgets.QMessageBox.about(self._view, "Ошибка", "Неправильный логин или пароль")
+                    self._execErrorMessageBox('Неправильный логин или пароль')
                 else:
                     student = Student()
                     obj = json.loads(recvText)
@@ -125,7 +134,7 @@ class Controller:
                     self._view.specialityName.setText(student.SpecialtyName)
 
             except ConnectionError:
-                QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
+                self._execErrorMessageBox('Не удалось установить соединение с сервером')
 
     def logoutButtonClick(self):
         self._view.table.setRowCount(0)
@@ -167,7 +176,7 @@ class Controller:
                 self._view.table.resizeColumnsToContents()
 
         except ConnectionError:
-            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
+            self._execErrorMessageBox('Не удалось установить соединение с сервером')
 
     def examsButtonClicked(self):
         serverRequest = ServerRequest()
@@ -203,7 +212,7 @@ class Controller:
                 self._view.table.resizeColumnsToContents()
 
         except ConnectionError:
-            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
+            self._execErrorMessageBox('Не удалось установить соединение с сервером')
 
     def gradesButtonClicked(self):
         serverRequest = ServerRequest()
@@ -241,7 +250,7 @@ class Controller:
                 self._view.table.resizeColumnsToContents()
 
         except ConnectionError:
-            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
+            self._execErrorMessageBox('Не удалось установить соединение с сервером')
 
     def eventsButtonClicked(self):
         serverRequest = ServerRequest()
@@ -276,5 +285,5 @@ class Controller:
                 self._view.table.resizeColumnsToContents()
 
         except ConnectionError:
-            QtWidgets.QMessageBox.about(self._view, "Ошибка", "Не удается установить соединение с сервером")
+            self._execErrorMessageBox('Не удалось установить соединение с сервером')
 

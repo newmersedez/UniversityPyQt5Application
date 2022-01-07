@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Controller.Controller import *
-
+from Utils.Styles import *
 
 class View(QtWidgets.QMainWindow):
     def __init__(self, model, controller):
@@ -35,7 +35,14 @@ class View(QtWidgets.QMainWindow):
         self.title.setStyleSheet("QLabel { color : white; }")
         self.titleLayout.addWidget(self.title)
         self.titleLayout.setContentsMargins(0, 0, 0, 20)
+
+        self.line = QtWidgets.QFrame()
+        self.line.setGeometry(QtCore.QRect(320, 150, 118, 3))
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+
         self.withTitleLayout.addLayout(self.titleLayout)
+        self.withTitleLayout.addWidget(self.line)
         self.withTitleLayout.addLayout(self.mainLayout)
 
         # Menu layouts
@@ -205,6 +212,9 @@ class View(QtWidgets.QMainWindow):
 
         self.table = QtWidgets.QTableWidget()
         self.tableLayout.addWidget(self.table)
+        # self.table.setStyleSheet("background-color: #404040; color: white; font-size:14pt;")
+        self.table.setStyleSheet(TABLE_STYLE)
+        self.table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.table.setHidden(True)
 
         self.contentLayout.addLayout(self.actionButtonsLayout)

@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from Controller.Controller import *
 from Utils.Styles import *
 
+
 class View(QtWidgets.QMainWindow):
     def __init__(self, model, controller):
         super(View, self).__init__()
@@ -66,21 +67,6 @@ class View(QtWidgets.QMainWindow):
         self._configureSpecialityCodeLayout()
         self._configureSpecialityNameLayout()
         self._configureContentLayout()
-
-    def _configureButtonsLayout(self):
-        self.loginLogoutLayout = QtWidgets.QVBoxLayout()
-        self.loginButton = QtWidgets.QPushButton('Войти', self)
-        self.loginButton.clicked.connect(self._controller.loginButtonClick)
-        self.loginButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
-        self.loginButton.setFixedSize(300, 40)
-        self.logoutButton = QtWidgets.QPushButton('Выйти', self)
-        self.logoutButton.clicked.connect(self._controller.logoutButtonClick)
-        self.logoutButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
-        self.logoutButton.setFixedSize(300, 40)
-        self.logoutButton.setEnabled(False)
-        self.loginLogoutLayout.addWidget(self.loginButton)
-        self.loginLogoutLayout.addWidget(self.logoutButton)
-        self.menuLayout.addLayout(self.loginLogoutLayout)
 
     def _configureStudentNameLayout(self):
         self.lastnameLayout = QtWidgets.QVBoxLayout()
@@ -184,6 +170,17 @@ class View(QtWidgets.QMainWindow):
         self.actionButtonsLayout = QtWidgets.QHBoxLayout()
         self.tableLayout = QtWidgets.QVBoxLayout()
 
+        self.adminStudentsButton = QtWidgets.QPushButton('.Студенты', self)
+        self.adminStudentsButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.adminStudentsButton.setFixedSize(200, 40)
+        self.adminStudentsButton.clicked.connect(self._controller.adminStudentsButtonClick)
+        self.adminStudentsButton.setHidden(True)
+        self.adminLecturersButton = QtWidgets.QPushButton('.Преподаватели', self)
+        self.adminLecturersButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.adminLecturersButton.setFixedSize(200, 40)
+        self.adminLecturersButton.clicked.connect(self._controller.adminLecturersButtonClick)
+        self.adminLecturersButton.setHidden(True)
+
         self.lessonsButton = QtWidgets.QPushButton('Расписание занятий', self)
         self.lessonsButton.clicked.connect(self._controller.lessonsButtonClicked)
         self.lessonsButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
@@ -209,13 +206,44 @@ class View(QtWidgets.QMainWindow):
         self.actionButtonsLayout.addWidget(self.examsButton)
         self.actionButtonsLayout.addWidget(self.gradesButton)
         self.actionButtonsLayout.addWidget(self.eventsButton)
+        self.actionButtonsLayout.addWidget(self.adminStudentsButton)
+        self.actionButtonsLayout.addWidget(self.adminLecturersButton)
 
         self.table = QtWidgets.QTableWidget()
         self.tableLayout.addWidget(self.table)
-        # self.table.setStyleSheet("background-color: #404040; color: white; font-size:14pt;")
         self.table.setStyleSheet(TABLE_STYLE)
         self.table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.table.setHidden(True)
 
         self.contentLayout.addLayout(self.actionButtonsLayout)
         self.contentLayout.addLayout(self.tableLayout)
+
+    def _configureButtonsLayout(self):
+        self.loginLogoutLayout = QtWidgets.QVBoxLayout()
+        self.loginButton = QtWidgets.QPushButton('Войти', self)
+        self.loginButton.clicked.connect(self._controller.loginButtonClick)
+        self.loginButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.loginButton.setFixedSize(300, 40)
+        self.logoutButton = QtWidgets.QPushButton('Выйти', self)
+        self.logoutButton.clicked.connect(self._controller.logoutButtonClick)
+        self.logoutButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.logoutButton.setFixedSize(300, 40)
+        self.logoutButton.setEnabled(False)
+
+        self.adminChangeLoginButton = QtWidgets.QPushButton('Изменить логин', self)
+        self.adminChangeLoginButton.clicked.connect(self._controller.adminStudentChangeLogin)
+        self.adminChangeLoginButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.adminChangeLoginButton.setFixedSize(300, 40)
+        self.adminChangeLoginButton.setHidden(True)
+
+        self.adminChangePasswordButton = QtWidgets.QPushButton('Изменить пароль', self)
+        self.adminChangePasswordButton.clicked.connect(self._controller.adminStudentChangePassword)
+        self.adminChangePasswordButton.setStyleSheet("color: #00B6FF; font-size:14pt;")
+        self.adminChangePasswordButton.setFixedSize(300, 40)
+        self.adminChangePasswordButton.setHidden(True)
+
+        self.loginLogoutLayout.addWidget(self.adminChangeLoginButton)
+        self.loginLogoutLayout.addWidget(self.adminChangePasswordButton)
+        self.loginLogoutLayout.addWidget(self.loginButton)
+        self.loginLogoutLayout.addWidget(self.logoutButton)
+        self.menuLayout.addLayout(self.loginLogoutLayout)
